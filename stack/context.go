@@ -270,7 +270,12 @@ var (
 // These are effectively constants.
 var (
 	// gotRoutineHeader
-	reRoutineHeader = regexp.MustCompile("^([ \t]*)goroutine (\\d+) \\[([^\\]]+)\\]\\:$")
+	//
+	// N.B. As of Go 1.22, crash stack dumps may include the g pointer; e.g.,
+	//   "goroutine 0 gp=0x63fa160 m=0 mp=0x63fb640 [idle]:"
+	// To account for that, the regex allows any number of optional "key=val" pairs, after the id.
+	//
+	reRoutineHeader = regexp.MustCompile("^([ \t]*)goroutine (\\d+)(?: \\w+=\\w+(?: \\w+=\\w+)*)? \\[([^\\]]+)\\]\\:$")
 	reMinutes       = regexp.MustCompile(`^(\d+) minutes$`)
 
 	// gotUnavail
